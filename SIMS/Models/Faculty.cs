@@ -1,0 +1,16 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace SIMS.Models
+{
+    public class Faculty
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int FacultyId { get; set; }
+        [Required]
+        public int UserId { get; set; }
+        [ForeignKey("UserId")]
+        public User User { get; set; }
+    }
+}
