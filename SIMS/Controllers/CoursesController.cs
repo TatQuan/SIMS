@@ -22,7 +22,7 @@ namespace SIMS.Controllers
         // GET: Courses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Courses.ToListAsync());
+            return View(await _context.Courses.Where(c => !c.IsDeleted).ToListAsync());
         }
 
         // GET: Courses/Details/5

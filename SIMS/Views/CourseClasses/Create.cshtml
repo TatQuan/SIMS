@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+
 }
 
 <h1>Create</h1>
@@ -18,21 +19,26 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CourseId" class="control-label"></label>
+                <label asp-for="CourseId" class="control-label">Course Name</label>
                 <select asp-for="CourseId" class ="form-control" asp-items="ViewBag.CourseId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="FacultyId" class="control-label"></label>
+                <label asp-for="FacultyId" class="control-label">Faculty Name</label>
                 <select asp-for="FacultyId" class ="form-control" asp-items="ViewBag.FacultyId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
+                @* <label asp-for="CreatedAt" class="control-label"></label>
                 <input asp-for="CreatedAt" class="form-control" />
-                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+                <span asp-validation-for="CreatedAt" class="text-danger"></span> *@
+
+                <input type="hidden" asp-for="CreatedAt" value="@DateTime.Now" />
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
+                @* <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label> *@
+                <label class="form-check-label">
+                    <input type="hidden" asp-for="IsDeleted" value="false" />
                 </label>
             </div>
             <div class="form-group">

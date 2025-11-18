@@ -19,23 +19,26 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CourseId" class="control-label"></label>
+                <label asp-for="CourseId" class="control-label">Course Name</label>
                 <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId"></select>
                 <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FacultyId" class="control-label"></label>
+                <label asp-for="FacultyId" class="control-label">Faculty Name</label>
                 <select asp-for="FacultyId" class="form-control" asp-items="ViewBag.FacultyId"></select>
                 <span asp-validation-for="FacultyId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="CreatedAt" class="control-label"></label>
+                <label asp-for="CreatedAt" class="control-label">Created At</label>
                 <input asp-for="CreatedAt" class="form-control" />
                 <span asp-validation-for="CreatedAt" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
-                <label class="form-check-label">
+                @* <label class="form-check-label">
                     <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+                </label> *@
+                <label class="form-check-label">
+                    <input type="hidden" asp-for="IsDeleted" value="@Model.IsDeleted" />
                 </label>
             </div>
             <div class="form-group">

@@ -22,7 +22,7 @@ namespace SIMS.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _context.Users.Where(c => !c.IsDeleted).ToListAsync());
         }
 
         // GET: User/Details/5

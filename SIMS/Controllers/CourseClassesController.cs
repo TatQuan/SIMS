@@ -22,7 +22,11 @@ namespace SIMS.Controllers
         // GET: CourseClasses
         public async Task<IActionResult> Index()
         {
-            var simsDbContext = _context.Classes.Include(c => c.Course).Include(c => c.Faculty);
+            var simsDbContext = _context.Classes
+             .Where(c => !c.IsDeleted)                  // chỉ lấy các class chưa bị xóa
+             .Include(c => c.Course)                     // include Course
+             .Include(c => c.Faculty)                    // include Faculty
+                 .ThenInclude(f => f.User);
             return View(await simsDbContext.ToListAsync());
         }
 
@@ -35,8 +39,10 @@ namespace SIMS.Controllers
             }
 
             var courseClass = await _context.Classes
+                .Where(c => !c.IsDeleted) // chỉ hiển thị false
                 .Include(c => c.Course)
                 .Include(c => c.Faculty)
+                    .ThenInclude(f => f.User) // include User trong Faculty
                 .FirstOrDefaultAsync(m => m.ClassId == id);
             if (courseClass == null)
             {
@@ -49,8 +55,19 @@ namespace SIMS.Controllers
         // GET: CourseClasses/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode");
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId");
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode");
+            //ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId");
+
+            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => !c.IsDeleted), "CourseId", "Name");
+            ViewData["FacultyId"] = new SelectList(
+                _context.Faculties
+                    .Include(f => f.User)
+                    .Where(f => !f.User.IsDeleted)
+                    .Select(f => new { f.FacultyId, f.User.FullName }),
+                "FacultyId",
+                "FullName"
+            );
+
             return View();
         }
 
@@ -67,8 +84,20 @@ namespace SIMS.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
+            //ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => !c.IsDeleted), "CourseId", "Name");
+            ViewData["FacultyId"] = new SelectList(
+                _context.Faculties
+                    .Include(f => f.User)
+                    .Where(f => !f.User.IsDeleted)
+                    .Select(f => new { f.FacultyId, f.User.FullName }),
+                "FacultyId",
+                "FullName"
+            );
+
             return View(courseClass);
         }
 
@@ -80,13 +109,29 @@ namespace SIMS.Controllers
                 return NotFound();
             }
 
-            var courseClass = await _context.Classes.FindAsync(id);
+            var courseClass = await _context.Classes
+                .Include(c => c.Course)       // include Course
+                .Include(c => c.Faculty)      // include Faculty
+                    .ThenInclude(f => f.User) // include User liên kết
+                .FirstOrDefaultAsync(c => c.ClassId == id);
             if (courseClass == null)
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
+            //ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => !c.IsDeleted), "CourseId", "Name");
+            ViewData["FacultyId"] = new SelectList(
+                _context.Faculties
+                    .Include(f => f.User)
+                    .Where(f => !f.User.IsDeleted)
+                    .Select(f => new { f.FacultyId, f.User.FullName }),
+                "FacultyId",
+                "FullName"
+            );
+
             return View(courseClass);
         }
 
@@ -122,8 +167,20 @@ namespace SIMS.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
-            ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            //ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseCode", courseClass.CourseId);
+            //ViewData["FacultyId"] = new SelectList(_context.Faculties, "FacultyId", "FacultyId", courseClass.FacultyId);
+
+            ViewData["CourseId"] = new SelectList(_context.Courses.Where(c => !c.IsDeleted), "CourseId", "Name");
+            ViewData["FacultyId"] = new SelectList(
+                _context.Faculties
+                    .Include(f => f.User)
+                    .Where(f => !f.User.IsDeleted)
+                    .Select(f => new { f.FacultyId, f.User.FullName }),
+                "FacultyId",
+                "FullName"
+            );
+
             return View(courseClass);
         }
 
