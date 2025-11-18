@@ -6,6 +6,16 @@
 
 <h1>Index</h1>
 
+<form method="get" asp-action="FilterByRole" style="margin-bottom:20px; width:300px;">
+    <select name="role" class="form-control" onchange="this.form.submit()">
+        <option value="">-- Filter by Role --</option>
+        <option value="Student">Student</option>
+        <option value="Faculty">Faculty</option>
+        <option value="Admin">Admin</option>
+    </select>
+</form>
+
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -39,9 +49,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
-            <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
+            </th> *@
             <th></th>
         </tr>
     </thead>
@@ -51,9 +61,19 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.Password)
+                <div class="position-relative" style="width:120px;">
+                    <input type="password"
+                            class="form-control form-control-sm view-password"
+                            value="@item.Password"
+                            readonly
+                            style="padding-right:30px; height:30px; font-size:0.85rem;">
+                    <i class="fa-solid fa-eye toggle-password"
+                        style="position:absolute; top:50%; right:5px; transform:translateY(-50%); cursor:pointer; font-size:0.85rem;"></i>
+                </div>
             </td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.FullName)
             </td>
@@ -75,9 +95,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>
-            <td>
+            @* <td>
                 @Html.DisplayFor(modelItem => item.IsDeleted)
-            </td>
+            </td> *@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
@@ -87,3 +107,23 @@
 }
     </tbody>
 </table>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".toggle-password").forEach(function(icon) {
+            icon.addEventListener("click", function() {
+                const input = this.parentElement.querySelector(".view-password");
+                if (input.type === "password") {
+                    input.type = "text";
+                    this.classList.remove("fa-eye");
+                    this.classList.add("fa-eye-slash");
+                } else {
+                    input.type = "password";
+                    this.classList.remove("fa-eye-slash");
+                    this.classList.add("fa-eye");
+                }
+            });
+        });
+    });
+</script>
+

@@ -60,6 +60,29 @@ namespace SIMS.Controllers
             {
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+
+                // Auto-create Student profile if Role is Student
+                if (user.Role == "Student")
+                {
+                    var student = new Student
+                    {
+                        UserId = user.UserId
+                    };
+                    _context.Students.Add(student);
+                    await _context.SaveChangesAsync();
+                }
+
+                // Auto-create Faculty profile if Role is Faculty
+                if (user.Role == "Faculty")
+                {
+                    var faculty = new Faculty
+                    {
+                        UserId = user.UserId
+                    };
+                    _context.Faculties.Add(faculty);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -152,6 +175,21 @@ namespace SIMS.Controllers
         private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.UserId == id);
+        }
+
+        //FILTERING USERS BY ROLE
+        public async Task<IActionResult> FilterByRole(string role)
+        {
+            if (string.IsNullOrEmpty(role))
+            {
+                return View("Index", await _context.Users.ToListAsync());
+            }
+
+            var users = await _context.Users
+                .Where(u => u.Role == role)
+                .ToListAsync();
+
+            return View("Index", users);
         }
     }
 }
